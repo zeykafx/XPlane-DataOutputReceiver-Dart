@@ -1,0 +1,14 @@
+name: xplane_connect
+description: Library to get an easy stream of data about XPlane UDP protocol.
+version: 1.0.1
+homepage: https://github.com/Lulzphantom/XPlane-DataOutputReceiver-Dart/
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  udp: ^3.0.3
+
+dev_dependencies:
+  pedantic: ^1.8.0
+  test: ^1.6.0
