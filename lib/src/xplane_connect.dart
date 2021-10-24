@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:udp/udp.dart';
 
 import 'models/xplane_data_model.dart';
@@ -39,7 +40,7 @@ class XplaneConnect {
     });
 
     // receiving\listening
-    await _receiver.listen((datagram) {      
+    await _receiver.listen((datagram) {
 
       // UDP data
       var xPdata = datagram.data;
@@ -56,8 +57,8 @@ class XplaneConnect {
                   
         }
       } else {
-        // Worng data type
-        print('Worng type of DATA');        
+        // Wrong data type
+        print('Wrong type of DATA');
         _xPlaneConnection.connectionIsRunning = false; 
         _setConnectionData(_xPlaneConnection);  
         return;
@@ -86,14 +87,17 @@ class XplaneConnect {
         //print(_xPlaneConnection.outputData);
       }
 
-      // Add dataOutputs to stream
-      _setConnectionData(_xPlaneConnection);       
+
+        // Add dataOutputs to stream
+        _setConnectionData(_xPlaneConnection);
+
     });
   }
 
   void _setConnectionData(XplaneConnectData data) {
     // Add data to stream    
     _controller.sink.add(data);
+
   }
 
   // Close current UDP connection
