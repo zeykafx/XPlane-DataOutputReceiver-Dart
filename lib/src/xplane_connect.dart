@@ -8,12 +8,12 @@ class XplaneConnect {
 
   XplaneConnect(int udpPort) {
     _udpPort = udpPort;
-    _listen(_udpPort);
+    _listen(_udpPort!);
   }
 
-  UDP _receiver;
-  int _udpPort;
-  XplaneConnectData _xPlaneConnection;
+  UDP? _receiver;
+  int? _udpPort;
+  XplaneConnectData? _xPlaneConnection;
 
   //Stream controller
   final _controller = StreamController<XplaneConnectData>();
@@ -31,19 +31,19 @@ class XplaneConnect {
     
     // Set UDP port to listen
     _receiver = await UDP.bind(Endpoint.any(port: Port(udpPort))).then((value) {
-      print('UDP binded on ${value.local.address}:${value.local.port.value} , waiting for XPlane');
-      _xPlaneConnection.port = udpPort;
-      _setConnectionData(_xPlaneConnection);
+      print('UDP binded on ${value.local.address}:${value.local.port!.value} , waiting for XPlane');
+      _xPlaneConnection!.port = udpPort;
+      _setConnectionData(_xPlaneConnection!);
       return value;
     }).catchError((error) {
       print('UDP error: $error');
     });
 
     // receiving\listening
-    await _receiver.listen((datagram) {
+    await _receiver!.asStream().listen((Datagram? datagram) {
 
       // UDP data
-      var xPdata = datagram.data;
+      var xPdata = datagram!.data;
 
       // Verify data header
       var header = String.fromCharCodes(xPdata, 0, 5);
@@ -52,15 +52,15 @@ class XplaneConnect {
         xPdata = xPdata.sublist(5, xPdata.lengthInBytes);
         if (!connected) {  
           connected = true;          
-          _xPlaneConnection.address = datagram.address;  
-          _xPlaneConnection.connectionIsRunning = true;     
+          _xPlaneConnection!.address = datagram.address;
+          _xPlaneConnection!.connectionIsRunning = true;
                   
         }
       } else {
         // Wrong data type
         print('Wrong type of DATA');
-        _xPlaneConnection.connectionIsRunning = false; 
-        _setConnectionData(_xPlaneConnection);  
+        _xPlaneConnection!.connectionIsRunning = false;
+        _setConnectionData(_xPlaneConnection!);
         return;
       }
 
@@ -69,7 +69,7 @@ class XplaneConnect {
       // Get count of data outputs
       var totalData = ((xPdata.lengthInBytes) / totalLen);      
 
-      _xPlaneConnection.outputData = {};
+      _xPlaneConnection!.outputData = {};
 
       for (var dataIndex = 0; dataIndex < totalData; dataIndex++) {
         
@@ -83,13 +83,13 @@ class XplaneConnect {
         var values = dataOutput.buffer.asFloat32List(4,4).toList();
 
         // Set value on dataOutputs object, update the data if exists        a
-        _xPlaneConnection.outputData.putIfAbsent(index, () => values);  
+        _xPlaneConnection!.outputData.putIfAbsent(index, () => values);
         //print(_xPlaneConnection.outputData);
       }
 
 
         // Add dataOutputs to stream
-        _setConnectionData(_xPlaneConnection);
+        _setConnectionData(_xPlaneConnection!);
 
     });
   }
@@ -102,21 +102,21 @@ class XplaneConnect {
 
   // Close current UDP connection
   void closeConnection() {
-    if (_receiver.closed) {
+    if (_receiver!.closed) {
       print('Connection has already closed');
     } else {
-      _receiver.close();
-      _xPlaneConnection.connectionIsRunning = false;
-      _setConnectionData(_xPlaneConnection);
+      _receiver!.close();
+      _xPlaneConnection!.connectionIsRunning = false;
+      _setConnectionData(_xPlaneConnection!);
       print('Connection has been closed');
     } 
   }
 
   // Reset current UDP connection
   void restartConnection() {
-    if (!_receiver.closed) {
+    if (!_receiver!.closed) {
       closeConnection();
     }      
-    _listen(_udpPort);
+    _listen(_udpPort!);
   }
 }

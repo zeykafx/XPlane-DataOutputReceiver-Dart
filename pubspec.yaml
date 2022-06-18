@@ -4,11 +4,11 @@ version: 1.0.1-dev.1
 homepage: https://github.com/Lulzphantom/XPlane-DataOutputReceiver-Dart/
 
 environment:
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: ">=2.16.2 <3.0.0"
 
 dependencies:
-  udp: ^3.0.3
+  udp: ^5.0.3
 
 dev_dependencies:
-  pedantic: ^1.8.0
-  test: ^1.6.0
+  pedantic: ^1.11.1
+  test: ^1.21.1

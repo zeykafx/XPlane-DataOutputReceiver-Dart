@@ -3,10 +3,10 @@ import 'dart:io';
 class XplaneConnectData {  
 
   // Connection address information
-  InternetAddress address;
+  InternetAddress? address;
 
   // Connection port
-  int port;
+  int? port;
 
  // Info of the connection state 
   bool connectionIsRunning = false;
